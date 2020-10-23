@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import nextConnect from 'next-connect'
-import dbConnect from '../../../database/dbConnect'
-
 import { User, IUserModel } from '../../../models/User'
+import mongoDBCloud from '../../../database/MongoDBCloud'
+import heatUpDB from '../../../database/heatUpDB'
+
+heatUpDB(mongoDBCloud)
 
 const endpoint = nextConnect()
-
-endpoint.use(dbConnect)
 
 endpoint.get(async (req: NextApiRequest, res: NextApiResponse) => {
     // em development, não use cache; em production, use cache e tente revalidar a cada 60s; deixe cache public nas CDNs da vercel
