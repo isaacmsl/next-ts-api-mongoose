@@ -1,10 +1,8 @@
+import mongooseClient from '../../../database/mongooseClient'
 import { NextApiRequest, NextApiResponse } from 'next'
 import nextConnect from 'next-connect'
-import { User, IUserModel } from '../../../models/User'
-import mongoDBCloud from '../../../database/MongoDBCloud'
-import heatUpDB from '../../../database/heatUpDB'
 
-heatUpDB(mongoDBCloud)
+import { User, IUserModel } from '../../../models/User'
 
 const endpoint = nextConnect()
 
@@ -13,6 +11,8 @@ endpoint.get(async (req: NextApiRequest, res: NextApiResponse) => {
     res.setHeader('Cache-Control', 'max-age=0, s-maxage=60, stale-while-revalidate, public')
 
     try {
+        await mongooseClient.connect()
+        
         const users = await User.find()
 
         return res.status(200).json({ sucess: true, qnt: users.length, data: users })
